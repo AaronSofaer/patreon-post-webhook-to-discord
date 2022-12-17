@@ -12,7 +12,8 @@ fi
 
 #curl -v -X POST "$1" -H "Content-Type:multipart/form-data" -F "payload_json={\"content\":\"Have a nice day\"};type=application/json"
      
-
+# https://discord.com/developers/docs/resources/webhook
+# https://discord.com/developers/docs/reference#uploading-files
 
 curl -X POST "$1" \
 	 -H "Content-Type:multipart/form-data" \
