@@ -1,0 +1,14 @@
+{
+  "data": {
+    "type": "webhook",
+    "attributes": {
+      "triggers": ["posts:publish"],
+      "uri": "https://www.example.com",
+    },
+    "relationships": {
+      "campaign": {
+        "data": {"type": "campaign", "id": "12345"},
+      },
+    },
+  },
+}
