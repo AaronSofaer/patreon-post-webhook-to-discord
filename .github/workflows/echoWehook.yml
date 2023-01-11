@@ -3,8 +3,8 @@
 name: webhook-echo-trigger
 on:
   repository_dispatch:
-  	types:
-  	  - echo-webhook 
+    types:
+      - echo-webhook 
 
 - name: Event Name
   run: |

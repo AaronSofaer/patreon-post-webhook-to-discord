@@ -3,11 +3,11 @@
     "type": "webhook",
     "attributes": {
       "triggers": ["posts:publish"],
-      "uri": "https://81nxz8m4q5squbrrtveoe3.hooks.webhookrelay.com"
+      "uri": "https://www.example.com"
     },
     "relationships": {
       "campaign": {
-        "data": {"type": "campaign", "id": "9758323"}
+        "data": {"type": "campaign", "id": "12345"}
       }
     }
   }
