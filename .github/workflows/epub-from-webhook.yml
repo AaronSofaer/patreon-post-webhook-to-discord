@@ -1,0 +1,39 @@
+name: Patreon webhook test
+
+on:
+  workflow_dispatch:
+# Allows external webhook trigger
+# https://kontent.ai/blog/how-to-trigger-github-action-using-webhook-with-no-code/
+  repository_dispatch:
+    types:
+      - generate_epub
+
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#providing-inputs
+# Any data that you send through the client_payload parameter will be available in the github.event context in your workflow. For example, if you send this request body when you create a repository dispatch event:
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#repository_dispatch
+jobs:
+  make-epub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.4'
+          cache: 'pip' # caching pip dependencies
+      - run: pip install -r requirements.txt
+      - run: |
+          echo $EPUB_WEBHOOK
+          python makeEpubFromWebhook.py
+        env:
+          # Discord Webhook url
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          MESSAGE: "Hwaet! A new chapter is out: "
+          # https://www.patreon.com/portal/registration/register-clients
+          PATREON_TOKEN: ${{ secrets.PATREON_CREATOR_ACCESS_TOKEN }}
+          EPUB_LANGUAGE: "en"
+          EPUB_AUTHORS:
+            - Test Author
+          # Note that whitespace and formatting must be user supplied
+          EPUB_TITLE_PREFIX: "Test prefix: "
+          # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#repository_dispatch
+          EPUB_WEBHOOK: ${{ github.event.client_payload.message }}
