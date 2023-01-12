@@ -38,7 +38,7 @@ def load_env():
     """Load environment variables and prepare them as needed."""
     keys = {
         "EPUB_LANGUAGE": os.getenv("EPUB_LANGUAGE"),
-        "EPUB_AUTHORS": json.loads(os.getenv("EPUB_AUTHORS")),
+        "EPUB_AUTHOR": os.getenv("EPUB_AUTHOR"),
         "EPUB_TITLE_PREFIX": os.getenv("EPUB_TITLE_PREFIX"),
         "EPUB_URL": os.getenv("EPUB_URL"),
         "EPUB_TITLE": os.getenv("EPUB_TITLE"),
@@ -52,7 +52,7 @@ def load_env():
     return keys
 
 
-def make_book(identifier, title_prefix, language, authors, title, contents):
+def make_book(identifier, title_prefix, language, author, title, contents):
     """Takes in necessary data and metadata, writes an epub to disk, returns filename"""
     book = epub.EpubBook()
 
@@ -64,8 +64,7 @@ def make_book(identifier, title_prefix, language, authors, title, contents):
     book.set_identifier(identifier)
     book.set_title(f"{title_prefix}{title}")
     book.set_language(language)
-    for author in authors:
-        book.add_author(author)
+    book.add_author(author)
 
     chapter = epub.EpubHtml(title=title, file_name="chapter.xhtml", lang=language)
     chapter.set_content(
@@ -106,7 +105,7 @@ def main():
         identifier=ENV["EPUB_URL"],
         title_prefix=ENV["EPUB_TITLE_PREFIX"],
         language=ENV["EPUB_LANGUAGE"],
-        authors=ENV["EPUB_AUTHORS"],
+        author=ENV["EPUB_AUTHOR"],
         title=ENV["EPUB_TITLE"],
         contents=ENV["EPUB_CONTENT"],
     )
