@@ -7,42 +7,64 @@ Get a webhook from patreon and ship it to discord
 * Go to your server | Integrations
 * Choose "New Webhook"
 * Configure the webhook bot with a name and channel.
-* Copy webhook url (Save as a github secret BBS TODO)
-* Test the webhook 
+* Copy webhook url
+* Use the `./testDiscordWebhookPOST.sh $WEBHOOK_URL` script with the url provided to test basic routing.
+
+## Setting up github
+
+* Fork this repository.
+* Edit the github action env files for the static metadata.
+* Make a [fine-grained personal access token.](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-fine-grained-personal-access-token). Don't forget a reasonable expiry (1 year) and to provide it only repo scope on only the one repo that you need.
 
 ## Setting up a webhook laundry
 
 Github, correctly, [requires an access token](https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-dispatch-event) to call its repository_dispatch webhook call. Thus, we need to launder the webhook call through an appropriate proxy. 
 
-### Webhook relay
+
+### Setting up webhook relay
+
+
 
 * Sign up for [webhookrelay](https://my.webhookrelay.com/) -- The free service should be acceptable.
-* For testing, set up a basic webhook relay. For destination, use the Discord webhook integration url set up above. Lock the path.
-* Create the configuration.
-* Use the `./testDiscordWebhookPOST.sh` script with the url provided to test basic routing.
 
+* Make a new function, called `Patreon-to-github`
+* In editor, open composer, paste the following:
 
-### Didn't work, but might work for you. Testing the proxy IFTTT -> Discord (No github) 
+```{.lua}
+local json = require("json")
 
-Using IFTTT, we can proxy webhooks. Use the "Recieve a web request with JSON payload", then authenticate the IFTTT bot to Discord and have it post the full json payload in a testing channel of your choice. Title should automagically be: "If Maker Event "Patreon Webhook", then post a message to a channel"
+local request_payload, err = json.decode(r.RequestBody)
+if err then error(err) end
 
-Note the Event ID at the bottom in light grey on white text. 
+local new_payload = {
+    event_type= "generate_epub",
+    client_payload= {
+    url= request_payload.data.attributes.url, 
+    title= request_payload.data.attributes.title,
+    content= request_payload.data.attributes.content,
+    }
+}
 
-Ensure that the IFTTT bot has been added to the channel assigned (especially if the test channel is locked)
+-- encoding
+local encoded_payload, err = json.encode(new_payload)
+if err then error(err) end
 
-Then, following the [IFTTT docs on webhooks](https://help.ifttt.com/hc/en-us/articles/115010230347-Webhooks-service-FAQ) go to the [webhooks service page](https://ifttt.com/maker_webhooks) and click "Documentation"
+r:SetRequestBody(encoded_payload)
 
-Get the url from arbitrary JSON payload, which should look like: `curl -X POST -H "Content-Type: application/json" -d '{"this":[{"is":{"some":["test","data"]}}]}' https://maker.ifttt.com/trigger/$IFTTT_EVENT/json/with/key/$IFTTT_TOKEN`
+-- set header
+r:SetRequestHeader("Content-Type", "application/json")
+r:SetRequestHeader("Accept", "application/vnd.github+json")
+r:SetRequestHeader("Authorization", "Bearer " .. cfg:GetValue("github token"))
+r:SetRequestHeader("X-GitHub-Api-Version", "2022-11-28")
 
-Test with:
-
-```{.bash}
-export IFTTT_KEY=<your key>
-export IFTTT_EVENT=<your event ID>
-curl -X POST -H "Content-Type: application/json" -d '{"this":[{"is":{"some":["test","data"]}}]}' https://maker.ifttt.com/trigger/$IFTTT_EVENT/json/with/key/$IFTTT_TOKEN
 ```
+* In config variables, make a variable `github token` and paste your github token as the value.
+* Make a new relay.
+* In your bucket, choose output details.
+* In the output details, set the destination URL to be: `https://api.github.com/repos/$GITHUB_REPO_OWNER/$GITHUB_REPO_NAME/dispatches`  (Note owner *and* name should be of your fork)
+* Choose transform (function) and choose the function you made above.
+* Test the proxy url `./testGithubAction.py`
 
-Even if the IFTTT bot is offline, we can still test the webhook by going to the IFTTT event page
 
 ## Setting up Patreon
 * Get a creator acess token
@@ -59,10 +81,5 @@ Even if the IFTTT bot is offline, we can still test the webhook by going to the 
   * make `patreonCreateWebhook.json` from `patreonCreateWebhook.json.dist`
     * Edit URL, edit campaign. No shell variables.
   * `curl -H "Content-Type:application/json" -H "Accept: application/json" -H "Authorization: Bearer $PATREON_TOKEN" -d '@patreonCreateWebhook.json' "https://patreon.com/api/oauth2/v2/webhooks"`
-
-
-
-## Setting up github
-
-* Make a [fine-grained personal access token.](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-fine-grained-personal-access-token). Don't forget a reasonable expiry (1 year) and to provide it only repo scope on only the one repo that you need.
+  * If you run it more than once, a get on the above without the post data will show how many, and `-X DELETE` on `/webhooks/{id}` will remove extras
 
