@@ -29,7 +29,7 @@ jobs:
           # https://www.patreon.com/portal/registration/register-clients
           PATREON_TOKEN: ${{ secrets.PATREON_CREATOR_ACCESS_TOKEN }}
           EPUB_LANGUAGE: "en"
-          EPUB_AUTHORS: "['Test Author']"
+          EPUB_AUTHOR: "Test Author"
           # Note that whitespace and formatting must be user supplied
           EPUB_TITLE_PREFIX: "Test prefix: "
           # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#repository_dispatch
