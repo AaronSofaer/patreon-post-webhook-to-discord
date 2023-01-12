@@ -33,5 +33,8 @@ jobs:
           # Note that whitespace and formatting must be user supplied
           EPUB_TITLE_PREFIX: "Test prefix: "
           # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#repository_dispatch
-          EPUB_WEBHOOK: |
-            ${{ github.event.client_payload }}
+          EPUB_URL: ${{ github.event.client_payload.url }}
+          EPUB_TITLE: ${{ github.event.client_payload.title }}
+          EPUB_CONTENT: ${{ github.event.client_payload.content }}
+          
+            

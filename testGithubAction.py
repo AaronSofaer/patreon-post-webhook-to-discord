@@ -34,7 +34,9 @@ def load_env():
     keys = {
         "GITHUB_URL": f"https://api.github.com/repos/{os.getenv('GITHUB_REPO_OWNER')}/{os.getenv('GITHUB_REPO_NAME')}/dispatches",
         "GITHUB_TOKEN": os.getenv("GITHUB_ACCESS_TOKEN"),
-        "EPUB_WEBHOOK": json.loads(os.getenv("EPUB_WEBHOOK")),
+        "EPUB_URL": os.getenv("EPUB_URL"),
+        "EPUB_TITLE": os.getenv("EPUB_TITLE"),
+        "EPUB_CONTENT": os.getenv("EPUB_CONTENT"),
     }
 
     for key in keys:
@@ -52,7 +54,14 @@ def main():
     }
     # Getting event type from .github/workflows/epub-from-webhook
     # https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-dispatch-event
-    data = {"event_type": "generate_epub", "client_payload": ENV["EPUB_WEBHOOK"]}
+    data = {
+        "event_type": "generate_epub",
+        "client_payload": {
+            "url": ENV["EPUB_URL"],
+            "title": ENV["EPUB_TITLE"],
+            "content": ENV["EPUB_CONTENT"],
+        },
+    }
     pprint(headers)
     pprint(data)
     r = requests.post(ENV["GITHUB_URL"], headers=headers, data=json.dumps(data))

@@ -40,7 +40,9 @@ def load_env():
         "EPUB_LANGUAGE": os.getenv("EPUB_LANGUAGE"),
         "EPUB_AUTHORS": json.loads(os.getenv("EPUB_AUTHORS")),
         "EPUB_TITLE_PREFIX": os.getenv("EPUB_TITLE_PREFIX"),
-        "EPUB_WEBHOOK": json.loads(os.getenv("EPUB_WEBHOOK")),
+        "EPUB_URL": os.getenv("EPUB_URL"),
+        "EPUB_TITLE": os.getenv("EPUB_TITLE"),
+        "EPUB_CONTENT": os.getenv("EPUB_CONTENT"),
         "DISCORD_WEBHOOK_URL": os.getenv("WEBHOOK_URL"),
         "DISCORD_MESSAGE": os.getenv("MESSAGE"),
     }
@@ -101,17 +103,17 @@ def post_to_discord(title, link, message, webhook, filename):
 def main():
     ENV = load_env()
     filename = make_book(
-        identifier=ENV["EPUB_WEBHOOK"]["data"]["attributes"]["url"],
+        identifier=ENV["EPUB_URL"],
         title_prefix=ENV["EPUB_TITLE_PREFIX"],
         language=ENV["EPUB_LANGUAGE"],
         authors=ENV["EPUB_AUTHORS"],
-        title=ENV["EPUB_WEBHOOK"]["data"]["attributes"]["title"],
-        contents=ENV["EPUB_WEBHOOK"]["data"]["attributes"]["content"],
+        title=ENV["EPUB_TITLE"],
+        contents=ENV["EPUB_CONTENT"],
     )
     webhook = discord.SyncWebhook.from_url(ENV["DISCORD_WEBHOOK_URL"])
     post_to_discord(
-        title=f"{ENV['EPUB_TITLE_PREFIX']}{ENV['EPUB_WEBHOOK']['data']['attributes']['title']}",
-        link=ENV["EPUB_WEBHOOK"]["data"]["attributes"]["url"],
+        title=f"{ENV['EPUB_TITLE_PREFIX']}{ENV['EPUB_TITLE']}",
+        link=ENV["EPUB_URL"],
         message=ENV["DISCORD_MESSAGE"],
         webhook=webhook,
         filename=filename,
