@@ -21,9 +21,7 @@ jobs:
           python-version: '3.10.4'
           cache: 'pip' # caching pip dependencies
       - run: pip install -r requirements.txt
-      - run: |
-          echo $EPUB_WEBHOOK
-          python makeEpubFromWebhook.py
+      - run: python makeEpubFromWebhook.py
         env:
           # Discord Webhook url
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -35,4 +33,4 @@ jobs:
           # Note that whitespace and formatting must be user supplied
           EPUB_TITLE_PREFIX: "Test prefix: "
           # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#repository_dispatch
-          EPUB_WEBHOOK: ${{ github.event.client_payload.message }}
+          EPUB_WEBHOOK: ${{ github.event.client_payload }}
