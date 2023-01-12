@@ -46,9 +46,9 @@ def load_env():
         "DISCORD_WEBHOOK_URL": os.getenv("WEBHOOK_URL"),
         "DISCORD_MESSAGE": os.getenv("MESSAGE"),
     }
-    logging.debug(f"{pformat(keys['EPUB_AUTHOR'])=}")
-    logging.debug(f"{pformat(keys['EPUB_WEBHOOK']['data']['attributes']['title'])=}")
-    logging.debug(f"{pformat(keys['EPUB_WEBHOOK']['data']['attributes']['url'])=}")
+    logging.debug(f"{keys['EPUB_AUTHOR']=}")
+    logging.debug(f"{keys['EPUB_URL']=}")
+    logging.debug(f"{keys['EPUB_TITLE']=}")
     return keys
 
 
