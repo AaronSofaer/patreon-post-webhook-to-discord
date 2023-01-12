@@ -62,4 +62,7 @@ Even if the IFTTT bot is offline, we can still test the webhook by going to the 
 
 
 
+## Setting up github
+
+* Make a [fine-grained personal access token.](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-fine-grained-personal-access-token). Don't forget a reasonable expiry (1 year) and to provide it only repo scope on only the one repo that you need.
 
