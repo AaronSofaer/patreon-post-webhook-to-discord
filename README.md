@@ -15,7 +15,7 @@ Get a webhook from patreon and ship it to discord
 * Fork this repository.
 * Edit the github action env files for the static metadata.
 * Make a [fine-grained personal access token.](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-fine-grained-personal-access-token). Don't forget a reasonable expiry (1 year) and to provide it only repo scope on only the one repo that you need.
-* In the repository configuration, you will need to make a number of variables and secrets
+* In the repository settings > security > Secrets and variables > actions , you will need to make a number of variables and secrets
   * Variables: 
     * DISCORD_MESSAGE = "Hwaet! A new chapter is out: "
     * EPUB_LANGUAGE = "en"
@@ -69,10 +69,12 @@ r:SetRequestHeader("X-GitHub-Api-Version", "2022-11-28")
 
 ```
 * In config variables, make a variable `github token` and paste your github token as the value.
-* Make a new relay.
-* In your bucket, choose output details.
-* In the output details, set the destination URL to be: `https://api.github.com/repos/$GITHUB_REPO_OWNER/$GITHUB_REPO_NAME/dispatches`  (Note owner *and* name should be of your fork)
-* Choose transform (function) and choose the function you made above.
+* In "Request forwarding"
+  * Choose "New", public endpoint, default input domain
+  * Do not run a function on the incoming request
+  * Route the request to: `https://api.github.com/repos/$GITHUB_REPO_OWNER/$GITHUB_REPO_NAME/dispatches`  (Note owner *and* name should be of your fork)
+  * *Do* Run a function before forwarding to destination. Choose the function you made above
+
 * Test the proxy url `./testGithubAction.py`
 
 
@@ -91,5 +93,5 @@ r:SetRequestHeader("X-GitHub-Api-Version", "2022-11-28")
   * make `patreonCreateWebhook.json` from `patreonCreateWebhook.json.dist`
     * Edit URL, edit campaign. No shell variables.
   * `curl -H "Content-Type:application/json" -H "Accept: application/json" -H "Authorization: Bearer $PATREON_TOKEN" -d '@patreonCreateWebhook.json' "https://patreon.com/api/oauth2/v2/webhooks"`
-  * If you run it more than once, a get on the above without the post data will show how many, and `-X DELETE` on `/webhooks/{id}` will remove extras
+  * If you run it more than once, a get on the above without the post data will show how many, and `-X DELETE` on `/webhooks/{id}` will remove extras. a GET to the above, without the -d will show all viable webhooks.
 
