@@ -1,4 +1,4 @@
-name: Patreon webhook test
+name: Create And Post Epub
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ on:
 # Any data that you send through the client_payload parameter will be available in the github.event context in your workflow. For example, if you send this request body when you create a repository dispatch event:
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#repository_dispatch
 jobs:
-  make-epub:
+  create-and-post-epub:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
