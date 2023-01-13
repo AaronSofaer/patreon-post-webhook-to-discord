@@ -47,9 +47,9 @@ def load_env():
         "DISCORD_WEBHOOK_URL": os.getenv("WEBHOOK_URL"),
         "DISCORD_MESSAGE": os.getenv("MESSAGE"),
     }
-    logging.debug(f"{keys['EPUB_AUTHOR']=}")
-    logging.debug(f"{keys['EPUB_URL']=}")
-    logging.debug(f"{keys['EPUB_TITLE']=}")
+    # logging.debug(f"{keys['EPUB_AUTHOR']=}")
+    # logging.debug(f"{keys['EPUB_URL']=}")
+    # logging.debug(f"{keys['EPUB_TITLE']=}")
     return keys
 
 
