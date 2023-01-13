@@ -15,6 +15,16 @@ Get a webhook from patreon and ship it to discord
 * Fork this repository.
 * Edit the github action env files for the static metadata.
 * Make a [fine-grained personal access token.](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-fine-grained-personal-access-token). Don't forget a reasonable expiry (1 year) and to provide it only repo scope on only the one repo that you need.
+* In the repository configuration, you will need to make a number of variables and secrets
+  * Variables: 
+    * DISCORD_MESSAGE = "Hwaet! A new chapter is out: "
+    * EPUB_LANGUAGE = "en"
+    * EPUB_AUTHOR = "Test Author"
+    * EPUB_TITLE_PREFIX = "Test prefix: "
+  * Secrets (when you know them):
+    * DISCORD_WEBHOOK_URL
+    * PATREON_CREATOR_ACCESS_TOKEN
+
 
 ## Setting up a webhook laundry
 
@@ -27,7 +37,7 @@ Github, correctly, [requires an access token](https://docs.github.com/en/rest/re
 
 * Sign up for [webhookrelay](https://my.webhookrelay.com/) -- The free service should be acceptable.
 
-* Make a new function, called `Patreon-to-github`
+* Under the request forwarding dropdown, select Functions and then create a new function, called `Patreon-to-github`
 * In editor, open composer, paste the following:
 
 ```{.lua}
