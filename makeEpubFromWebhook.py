@@ -27,7 +27,7 @@ EBOOK_CSS = 'ol{margin:0;padding:0}table td,table th{padding:0}.c1{color:#000000
 
 # logging.getLogger("requests").setLevel(logging.WARNING)
 # logging.getLogger("urllib3").setLevel(logging.WARNING)
-# logging.basicConfig(format=FORMAT, level=logging.DEBUG)
+logging.basicConfig(format=FORMAT, level=logging.WARNING)
 
 # Setup environment
 load_dotenv()  # take environment variables from .env.
@@ -47,9 +47,9 @@ def load_env():
         "DISCORD_WEBHOOK_URL": os.getenv("WEBHOOK_URL"),
         "DISCORD_MESSAGE": os.getenv("MESSAGE"),
     }
-    # logging.debug(f"{keys['EPUB_AUTHOR']=}")
-    # logging.debug(f"{keys['EPUB_URL']=}")
-    # logging.debug(f"{keys['EPUB_TITLE']=}")
+    logging.debug(f"{keys['EPUB_AUTHOR']=}")
+    logging.debug(f"{keys['EPUB_URL']=}")
+    logging.debug(f"{keys['EPUB_TITLE']=}")
     return keys
 
 
