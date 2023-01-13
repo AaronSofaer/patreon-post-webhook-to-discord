@@ -91,7 +91,7 @@ r:SetRequestHeader("X-GitHub-Api-Version", "2022-11-28")
 
 * Invoke the webhook-making-api call
   * make `patreonCreateWebhook.json` from `patreonCreateWebhook.json.dist`
-    * Edit URL, edit campaign. No shell variables.
+    * Edit attributes uri, edit campaign id. No shell variables.
   * `curl -H "Content-Type:application/json" -H "Accept: application/json" -H "Authorization: Bearer $PATREON_TOKEN" -d '@patreonCreateWebhook.json' "https://patreon.com/api/oauth2/v2/webhooks"`
   * If you run it more than once, a get on the above without the post data will show how many, and `-X DELETE` on `/webhooks/{id}` will remove extras. a GET to the above, without the -d will show all viable webhooks.
 
