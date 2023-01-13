@@ -26,8 +26,6 @@ jobs:
           # Discord Webhook url
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           MESSAGE: ${{ vars.DISCORD_MESSAGE }}
-          # https://www.patreon.com/portal/registration/register-clients
-          PATREON_TOKEN: ${{ secrets.PATREON_CREATOR_ACCESS_TOKEN }}
           EPUB_LANGUAGE: ${{ vars.EPUB_LANGUAGE }}
           EPUB_AUTHOR: ${{ vars.EPUB_AUTHOR }}
           # Note that whitespace and formatting must be user supplied
