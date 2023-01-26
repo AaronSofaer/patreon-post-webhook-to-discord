@@ -36,8 +36,7 @@ def load_env():
         "GITHUB_TOKEN": os.getenv("GITHUB_ACCESS_TOKEN"),
         "EPUB_URL": os.getenv("EPUB_URL"),
         "EPUB_TITLE": os.getenv("EPUB_TITLE"),
-        "EPUB_CONTENT": os.getenv("EPUB_CONTENT"),
-    }
+        "EPUB_CONTENT": os.getenv("EPUB_CONTENT")    }
 
     for key in keys:
         print(f"{key} {keys[key]}")

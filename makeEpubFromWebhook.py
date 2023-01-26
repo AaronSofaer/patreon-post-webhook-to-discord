@@ -46,6 +46,8 @@ def load_env():
         "EPUB_CONTENT": os.getenv("EPUB_CONTENT"),
         "DISCORD_WEBHOOK_URL": os.getenv("WEBHOOK_URL"),
         "DISCORD_MESSAGE": os.getenv("MESSAGE"),
+        "DISCORD_THREADID": os.getenv("DISCORD_THREADID") or None # if the env isn't set, it'll default to none anyways, but this makes it clearer.
+
     }
     logging.debug(f"{keys['EPUB_AUTHOR']=}")
     logging.debug(f"{keys['EPUB_URL']=}")
@@ -88,7 +90,7 @@ def make_book(identifier, title_prefix, language, author, title, contents):
     return filename
 
 
-def post_to_discord(title, link, message, webhook, filename):
+def post_to_discord(title, link, message, webhook, filename, thread=None):
     """Posts the webhook'd item to discord, prepended by message"""
 
     # https://discordpy.readthedocs.io/en/stable/api.html#discord.SyncWebhook.send
@@ -96,10 +98,15 @@ def post_to_discord(title, link, message, webhook, filename):
     # Note that epub doesn't write to a buffer, so we now need to read in the filename
     with open(filename, mode="rb") as epub_file:
         chapter_epub = discord.File(fp=epub_file, filename=filename, description=title)
-
-        webhook.send(
-            content=f"{message} {title} https://patreon.com{link}", file=chapter_epub
-        )
+        if thread:
+            webhook.send(
+                content=f"{message} {title} https://patreon.com{link}", file=chapter_epub,
+                thread=discord.Object(id=thread)
+            )
+        else:
+            webhook.send(
+                content=f"{message} {title} https://patreon.com{link}", file=chapter_epub
+            )
 
 
 def main():
@@ -119,6 +126,7 @@ def main():
         message=ENV["DISCORD_MESSAGE"],
         webhook=webhook,
         filename=filename,
+        thread=ENV["DISCORD_THREADID"]
     )
 
 

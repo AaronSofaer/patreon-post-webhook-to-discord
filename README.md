@@ -24,7 +24,9 @@ Get a webhook from patreon and ship it to discord
   * Secrets (when you know them):
     * DISCORD_WEBHOOK_URL
     * PATREON_CREATOR_ACCESS_TOKEN
-
+* To ping a role with the discord message, use the following form `<@&roleID>` where roleid can be found in Server Settings > Roles > [meatball menu next to your specific role], copy roleID. So, in testwebhook, it looks like: `  -F 'payload_json={"content":"<@&271464313565347840> Here is a normal message", "attachments":[{"id":0, "description": "Aeroplanes and Dirigibles of War by Frederick Arthur Ambrose Talbot", "filename": "AeroplanesAndDirigiblesOfWar.epub"}]};type=application/json' \
+` 
+* To reply to a thread, find the threadID (meatball menu in the thread). To test this, call `./testDiscordWebhookPOST.sh "$WEBHOOK_URL?thread_id=$DISCORD_THREADID"` To post to an extant thread, set the github action environment variable `DISCORD_THREADID`
 
 ## Setting up a webhook laundry
 

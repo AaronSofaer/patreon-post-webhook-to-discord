@@ -14,9 +14,10 @@ fi
      
 # https://discord.com/developers/docs/resources/webhook
 # https://discord.com/developers/docs/reference#uploading-files
-
+# https://discord.com/developers/docs/resources/channel#allowed-mentions-object
+# https://discord.com/developers/docs/topics/threads#webhooks
 curl -X POST "$1" \
 	 -H "Content-Type:multipart/form-data" \
-	 -F 'payload_json={"content":"Here is a normal message", "attachments":[{"id":0, "description": "Aeroplanes and Dirigibles of War by Frederick Arthur Ambrose Talbot", "filename": "AeroplanesAndDirigiblesOfWar.epub"}]};type=application/json' \
+	 -F 'payload_json={"content":"<@&271464313565347840> Here is a normal message", "attachments":[{"id":0, "description": "Aeroplanes and Dirigibles of War by Frederick Arthur Ambrose Talbot", "filename": "AeroplanesAndDirigiblesOfWar.epub"}]};type=application/json' \
 	 -F "files[0]=@/tmp/testEpubAeroplanesAndDirigiblesOfWar.epub;filename='AeroplanesAndDirigiblesOfWar.epub';type=application/epub+zip;"
 #rm /tmp/testEpubAeroplanesAndDirigiblesOfWar.epub
