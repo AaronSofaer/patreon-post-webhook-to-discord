@@ -46,9 +46,12 @@ def load_env():
         "EPUB_CONTENT": os.getenv("EPUB_CONTENT"),
         "DISCORD_WEBHOOK_URL": os.getenv("WEBHOOK_URL"),
         "DISCORD_MESSAGE": os.getenv("MESSAGE"),
-        "DISCORD_THREADID": os.getenv("DISCORD_THREADID") or None # if the env isn't set, it'll default to none anyways, but this makes it clearer.
+        "DISCORD_THREADID": os.getenv("DISCORD_THREADID") or None, # if the env isn't set, it'll default to none anyways, but this makes it clearer.
+        "DISCORD_CREATE_NEW_THREAD": os.getenv("DISCORD_CREATE_NEW_THREAD") or False, # if the env isn't set, it'll default to none anyways, but this makes it clearer.
 
     }
+    if keys["DISCORD_THREADID"] and keys["DISCORD_THREADNAME"]:
+        raise ValueError("Cannot have both a thread ID and thread name set. Sorry.")
     logging.debug(f"{keys['EPUB_AUTHOR']=}")
     logging.debug(f"{keys['EPUB_URL']=}")
     logging.debug(f"{keys['EPUB_TITLE']=}")
@@ -90,7 +93,7 @@ def make_book(identifier, title_prefix, language, author, title, contents):
     return filename
 
 
-def post_to_discord(title, link, message, webhook, filename, thread=None):
+def post_to_discord(title, link, message, webhook, filename, thread_id=None, create_new_thread=False):
     """Posts the webhook'd item to discord, prepended by message"""
 
     # https://discordpy.readthedocs.io/en/stable/api.html#discord.SyncWebhook.send
@@ -98,10 +101,15 @@ def post_to_discord(title, link, message, webhook, filename, thread=None):
     # Note that epub doesn't write to a buffer, so we now need to read in the filename
     with open(filename, mode="rb") as epub_file:
         chapter_epub = discord.File(fp=epub_file, filename=filename, description=title)
-        if thread:
+        if thread_id:
             webhook.send(
                 content=f"{message} {title} https://patreon.com{link}", file=chapter_epub,
-                thread=discord.Object(id=thread)
+                thread=discord.Object(id=thread_id)
+            )
+        elif create_new_thread:
+            webhook.send(
+                content=f"{message} {title} https://patreon.com{link}", file=chapter_epub,
+                thread_name=title
             )
         else:
             webhook.send(
@@ -126,7 +134,8 @@ def main():
         message=ENV["DISCORD_MESSAGE"],
         webhook=webhook,
         filename=filename,
-        thread=ENV["DISCORD_THREADID"]
+        thread_id=ENV["DISCORD_THREADID"],
+        create_new_thread=ENV["DISCORD_CREATE_NEW_THREAD"]
     )
 
 
